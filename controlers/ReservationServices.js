@@ -72,5 +72,12 @@ class ReservationServices{
           });
     }
 
+    async getPassword(id,button_id){
+     let data = await this.products.findOne({_id:ObjectId(id)})
+      console.log(data.objectbutton.filter(x=>x.id == button_id))
+      return data.objectbutton.filter(x=>x.id == button_id)[0].password  
+
+  }
+
 }
 module.exports = ReservationServices;

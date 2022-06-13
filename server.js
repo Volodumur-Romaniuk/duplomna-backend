@@ -7,7 +7,7 @@ const ProductService = require('./controlers/ProductsServices')
 const ReservationService = require('./controlers/ReservationServices')
 const path = require("path");
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5003;
 const app = express();
 
 app.use(cors());
@@ -67,6 +67,19 @@ app.post("/reservation/update/:id/:button_id",(req,res) =>{
   let button_id = req.params.button_id;
 
     res.json(reserv.updateReservation(id,button_id,req.body));
+
+})
+
+app.get("/reservation/getpas/:id/:button_id",(req,res) =>{
+  let reserv = new ReservationService();
+  let id = req.params.id;
+  let button_id = req.params.button_id;
+
+
+   reserv.getPassword(id,button_id).then((result)=>{
+     res.send({password:result})
+   })
+    
 
 })
 
