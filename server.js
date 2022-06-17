@@ -5,9 +5,12 @@ const dbo = require('./db/connection');
 const Reservation = require('./entity/Reservation');
 const ProductService = require('./controlers/ProductsServices')
 const ReservationService = require('./controlers/ReservationServices')
+const nodemailer = require('nodemailer');
 const path = require("path");
 
-const PORT = process.env.PORT || 5003;
+
+
+const PORT = process.env.PORT || 5002;
 const app = express();
 
 app.use(cors());
@@ -15,11 +18,22 @@ app.use(express.json());
 //app.use(require('./controlers/ProductsController'));
 
 // Global error handling
+const transporter = nodemailer.createTransport({
+  host:'smtp.gmail.com',
+  port: 587,
+  auth:{
+    user: 'romaniuk.volodymyr.clg@chnu.edu.ua',
+    pass: '2003vova1504',
+  },
+});
+transporter.verify().then(console.log).catch(console.error)
+
+
 
 
 // perform a database connection when the server starts
 dbo.connectToServer(function (err) {
-  if (err) {
+  if (err) { 
     console.error(err);
     return ;
   }
@@ -70,17 +84,29 @@ app.post("/reservation/update/:id/:button_id",(req,res) =>{
 
 })
 
+app.post("/reservation/sendmailRes",(req,res) =>{
+
+    transporter.sendMail({
+      from:'"Vova"romaniuk.volodymyr.clg@chnu.edu.ua',
+      to:`${req.body.to},${req.body.to}`,
+      subject:req.body.subject,
+      text:req.body.text,
+      html:req.body.html
+    }).then(info =>{
+      console.log(info);
+    }).catch(console.error)
+
+  res.json()
+})
+
 app.get("/reservation/getpas/:id/:button_id",(req,res) =>{
   let reserv = new ReservationService();
   let id = req.params.id;
   let button_id = req.params.button_id;
-
-
    reserv.getPassword(id,button_id).then((result)=>{
      res.send({password:result})
    })
-    
-
 })
+
 
 

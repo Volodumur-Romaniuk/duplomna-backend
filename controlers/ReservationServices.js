@@ -11,8 +11,7 @@ class ReservationServices{
         this.products = this.db.collection('Reservation')
     } 
 
-    getReservation(){
-         
+    getReservation(){ 
       return new Promise(resolve => {
           this.products.find({}).toArray().then((result) => {
              resolve(result);
